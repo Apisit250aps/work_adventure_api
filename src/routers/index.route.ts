@@ -1,5 +1,6 @@
 import { Router, Request, Response } from "express"
 import auth from "./auth.route";
+import work from "./work.route";
 
 const router = Router()
 router.get("/", (req: Request, res: Response) => {
@@ -7,5 +8,6 @@ router.get("/", (req: Request, res: Response) => {
 })
 //
 router.use("/auth", auth)
+router.use("/work", work)
 
 export default router
