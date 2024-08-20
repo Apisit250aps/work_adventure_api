@@ -14,10 +14,10 @@ export interface IWork extends Document {
   const WorkSchema: Schema<IWork> = new Schema({
     characterId: { type: Schema.Types.ObjectId, ref: 'Character' }, // Assuming characterId references another model
     name: { type: String, required: true },
-    description: { type: String },
+    description: { type: String, required: false },
     start_date: { type: Date, required: false },
     due_date: { type: Date, required: false},
-    status: { type: String, enum: ['todo', 'inprogress', 'done'], required: true },
+    status: { type: String, enum: ['todo', 'inprogress', 'done'], required: true, default:"todo" },
   }, {
     timestamps: true // This will automatically add createdAt and updatedAt fields
   });

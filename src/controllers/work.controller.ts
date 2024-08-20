@@ -34,11 +34,11 @@ export default {
   async updateWork(req: Request<{ workId: string; body: IWork }>, res: Response) {
     try {
       const { workId } = req.params
-      const { id, name, description, start_date, due_date, status } = req.body
+      const { name, description, start_date, due_date, status } = req.body
 
       const updatedWork = await Work.findByIdAndUpdate(
         workId,
-        { id, name, description, start_date, due_date, status },
+        { name, description, start_date, due_date, status },
         { new: true }
       )
 
