@@ -11,7 +11,7 @@ router.get("/", (req: Request, res: Response) => {
 });
 //
 router.use("/auth", auth)
-router.use("/work", work)
 router.use("/character", character);
+router.use("/work", work)
 
 export default router;
