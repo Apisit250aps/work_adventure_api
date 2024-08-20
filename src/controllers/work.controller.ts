@@ -31,7 +31,10 @@ export default {
     }
   },
 
-  async updateWork(req: Request<{ workId: string; body: IWork }>, res: Response) {
+  async updateWork(
+    req: Request<{ workId: string; body: IWork }>,
+    res: Response
+  ) {
     try {
       const { workId } = req.params
       const { name, description, start_date, due_date, status } = req.body
