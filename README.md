@@ -247,16 +247,16 @@ erDiagram
 
     User ||--|{ Character : "owns"
     Character ||--|{ Work : "manages"
-    Character ||--|{ Attribute : "has"
+    Character ||--|| Attribute : "has"
     Work ||--|{ Task : "contains"
    
     Character ||--|{ Quest : "undertakes"
     Character ||--|{ Achievement : "earns"
-    Quest ||--|{ Reward : "gives"
-    Achievement ||--|{ Reward : "gives"
-    Achievement ||--|{ Condition : "based_on"
-    User ||--|{ UserStatistic : "has"
-    Character ||--|{ CharacterStatistic : "has"
+    Quest ||--|| Reward : "gives"
+    Achievement ||--|| Reward : "gives"
+    Achievement ||--|| Condition : "based_on"
+    User ||--|| UserStatistic : "has"
+    Character ||--|| CharacterStatistic : "has"
 
 ```
 

@@ -5,7 +5,6 @@ import { authenticateJWT } from "../middlewares/auth.middleware";
 const auth = Router()
 auth.post("/register", authController.userRegister)
 auth.post("/login", authController.userLogin)
-
 auth.use(authenticateJWT)
 
 export default auth
