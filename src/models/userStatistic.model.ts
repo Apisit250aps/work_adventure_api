@@ -34,4 +34,3 @@ export const UserStatistics = model<IUserStatistics>(
   "UserStatistics",
   UserStatisticsSchema
 )
-

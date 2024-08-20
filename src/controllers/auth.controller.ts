@@ -2,8 +2,7 @@ import { Request, Response } from "express"
 import { comparePasswords, hashPassword } from "../utils/password"
 import { IUser, User } from "../models/user.model"
 import { generateToken } from "../utils/jwt"
-import { IUserStatistics, UserStatistics } from "../models/userStatictic.model"
-
+import { UserStatistics } from "../models/userStatistic.model"
 export default {
   async userRegister(req: Request<{ body: IUser }>, res: Response) {
     try {
