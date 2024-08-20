@@ -7,7 +7,7 @@ export interface IUser extends Document {
   fname?: string
   lname?: string
   password: String
-  isAdmin: Boolean
+  isAdmin?: Boolean
   createdAt: Date
   updatedAt: Date
 }

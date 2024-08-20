@@ -2,6 +2,7 @@ import { Request, Response } from "express"
 import { comparePasswords, hashPassword } from "../utils/password"
 import { IUser, User } from "../models/user.model"
 import { generateToken } from "../utils/jwt"
+import { IUserStatistics, UserStatistics } from "../models/userStatictic.model"
 
 export default {
   async userRegister(req: Request<{ body: IUser }>, res: Response) {
@@ -18,6 +19,8 @@ export default {
         username: username,
         password: hashedPassword
       })
+
+      await UserStatistics.create({ userId: newUser })
 
       return res.status(201).json({ newUser })
     } catch (error) {
