@@ -12,7 +12,7 @@ export interface ICharacter extends Document {
   health?: number;
   stamina?: number;
   focus_point?: number;
-  userId: Types.ObjectId;
+  userId: Types.ObjectId[]; // Array of user IDs for multiple users
   createdAt: Date;
   updatedAt: Date;
 }
@@ -52,18 +52,32 @@ const CharacterSchema: Schema<ICharacter> = new Schema(
       type: Number,
       default: 0,
     },
-    userId: {
-      type: Schema.Types.ObjectId,
-      ref: "User",
-      required: true,
-    },
+    userId: [
+      {
+        type: Schema.Types.ObjectId,
+        ref: "User",
+        required: true,
+      },
+    ], // Array of user IDs
   },
   {
-    timestamps: true, // This option will automatically add `createdAt` and `updatedAt` fields
+    timestamps: true, // Automatically adds `createdAt` and `updatedAt` fields
   }
 );
 
-// Create the Character model
-const Character = mongoose.model<ICharacter>("Character", CharacterSchema);
+// Middleware to update `updatedAt` before certain operations
+CharacterSchema.pre("findOneAndUpdate", function (next) {
+  this.set({ updatedAt: new Date() });
+  next();
+});
 
-export default Character;
+CharacterSchema.pre("updateOne", function (next) {
+  this.set({ updatedAt: new Date() });
+  next();
+});
+
+// Create the Character model
+export const Character = mongoose.model<ICharacter>(
+  "Character",
+  CharacterSchema
+);
