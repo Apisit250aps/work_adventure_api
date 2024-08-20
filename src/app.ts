@@ -4,7 +4,8 @@ import cookieParser from "cookie-parser"
 import cors from "cors"
 import helmet from "helmet"
 import morgan from "morgan"
-import auth from "./routers/auth.route";
+import auth from "./routers/auth.route"
+import router from "./routers/index.route"
 // define app
 const app = express()
 // middlewares
@@ -15,9 +16,6 @@ app.use(cookieParser())
 app.use(helmet())
 app.use(morgan("dev"))
 // index route
-app.get("/", (req: Request, res: Response) => {
-  res.send("Hello World").status(200)
-})
-//
-app.use("/auth", auth)
+app.use("/", router)
+
 export default app
