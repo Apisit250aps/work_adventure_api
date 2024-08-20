@@ -2,36 +2,72 @@
 
 import { Request, Response } from "express";
 import { ICharacter, Character } from "../models/character.model";
+import { IUser } from "../models/user.model";
 
 export default {
-  async createCharacter(req: Request, res: Response) {
+  async createCharacter(
+    req: Request<{ user?: IUser; body: ICharacter }>,
+    res: Response
+  ) {
     try {
-      const { name, userId } = req.body;
+      const { name } = req.body;
+      const userId = req.user?._id;
+      if (!userId) {
+        return res.status(401).json({ error: "Unauthorized" });
+      }
       const newCharacter = await Character.create({
         name,
-        userId: [userId],
+        userId: userId,
         createdAt: new Date(),
         updatedAt: new Date(),
       });
-      res.status(201).json(newCharacter);
+      return res.status(201).json(newCharacter);
     } catch (error) {
-      res.status(500).json({ error });
+      return res.status(500).json({ error });
     }
   },
 
-  async getCharacter(req: Request, res: Response) {
+  async getCharacter(
+    req: Request<{ user?: IUser; body: ICharacter }>,
+    res: Response
+  ) {
     try {
-      const characters = await Character.find({ userId: req.user?._id });
-      res.json(characters);
+      const userId = req.user?._id;
+      if (!userId) {
+        return res.status(401).json({ error: "Unauthorized" });
+      }
+      const characters = await Character.find({ userId });
+      return res.json(characters);
     } catch (error) {
-      res.status(500).json({ error });
+      return res.status(500).json({ error });
     }
   },
 
-  async updateCharacter(req: Request, res: Response) {
+  async updateCharacter(
+    req: Request<{
+      user?: IUser;
+      body: Partial<ICharacter>;
+      charId: string;
+    }>,
+    res: Response
+  ) {
     try {
-      const { charId, name, exp, level, coin, health, stamina, focus_point } =
-        req.body;
+      const { charId } = req.params;
+      const userId = req.user?._id;
+      if (!userId) {
+        return res.status(401).json({ error: "Unauthorized" });
+      }
+      const { name, exp, level, coin, health, stamina, focus_point } = req.body;
+
+      // Verify if the character belongs to the authenticated user
+      const character = await Character.findById(charId);
+      if (!character) {
+        return res.status(404).json({ error: "Character not found" });
+      }
+      if (character.userId.toString() !== userId.toString()) {
+        return res.status(403).json({ error: "Forbidden" });
+      }
+
       const updatedCharacter = await Character.findByIdAndUpdate(
         charId,
         {
@@ -46,25 +82,42 @@ export default {
         },
         { new: true }
       );
-      res.json(updatedCharacter);
+
+      return res.json(updatedCharacter);
     } catch (error) {
-      res.status(500).json({ error });
+      return res.status(500).json({ error });
     }
   },
 
   async deleteCharacter(
-    req: Request<{ charId: string }>, // Type the request params correctly
+    req: Request<{ user?: IUser; charId: string }>,
     res: Response
   ) {
     try {
+      const userId = req.user?._id;
+      if (!userId) {
+        return res.status(401).json({ error: "Unauthorized" });
+      }
       const { charId } = req.params;
-      const deletedCharacter = await Character.findByIdAndDelete(charId);
-      if (!deletedCharacter) {
+
+      // Verify if the character belongs to the authenticated user
+      const character = await Character.findById(charId);
+      if (!character) {
         return res.status(404).json({ error: "Character not found" });
       }
-      res.json({ message: "Character deleted successfully", deletedCharacter });
+      if (character.userId.toString() !== userId.toString()) {
+        return res.status(403).json({ error: "Forbidden" });
+      }
+
+      const deletedCharacter = await Character.findByIdAndDelete(charId);
+      return res.json({
+        message: "Character deleted successfully",
+        deletedCharacter,
+      });
     } catch (error) {
-      res.status(500).json({ error: error || "An unexpected error occurred" });
+      return res
+        .status(500)
+        .json({ error: error || "An unexpected error occurred" });
     }
   },
 };

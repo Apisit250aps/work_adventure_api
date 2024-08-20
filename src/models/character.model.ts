@@ -1,10 +1,11 @@
 /** @format */
 
-import mongoose, { Schema, Document, Types } from "mongoose";
+import mongoose, { Schema, Document, Types, ObjectId } from "mongoose";
 
 // Define the ICharacter interface extending Document
 export interface ICharacter extends Document {
-  charId?: Types.ObjectId;
+  charId?: ObjectId;
+  userId: Types.ObjectId;
   name: string;
   exp?: number;
   level?: number;
@@ -12,7 +13,6 @@ export interface ICharacter extends Document {
   health?: number;
   stamina?: number;
   focus_point?: number;
-  userId: Types.ObjectId[]; // Array of user IDs for multiple users
   createdAt: Date;
   updatedAt: Date;
 }
@@ -20,10 +20,12 @@ export interface ICharacter extends Document {
 // Define the Character schema
 const CharacterSchema: Schema<ICharacter> = new Schema(
   {
-    charId: {
-      type: Schema.Types.ObjectId,
-      default: () => new mongoose.Types.ObjectId(),
-    },
+    userId: [
+      {
+        type: Schema.Types.ObjectId,
+        ref: "User",
+      },
+    ], // Array of user IDs
     name: {
       type: String,
       required: true,
@@ -52,13 +54,6 @@ const CharacterSchema: Schema<ICharacter> = new Schema(
       type: Number,
       default: 0,
     },
-    userId: [
-      {
-        type: Schema.Types.ObjectId,
-        ref: "User",
-        required: true,
-      },
-    ], // Array of user IDs
   },
   {
     timestamps: true, // Automatically adds `createdAt` and `updatedAt` fields

@@ -10,6 +10,6 @@ router.get("/", (req: Request, res: Response) => {
 });
 //
 router.use("/auth", auth);
-router.use("/characters", character);
+router.use("/character", character);
 
 export default router;
