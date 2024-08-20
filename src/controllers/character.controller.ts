@@ -19,7 +19,7 @@ export default {
     }
   },
 
-  async getCharacters(req: Request, res: Response) {
+  async getCharacter(req: Request, res: Response) {
     try {
       const characters = await Character.find({ userId: req.user?._id });
       res.json(characters);
