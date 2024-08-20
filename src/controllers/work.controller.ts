@@ -1,15 +1,17 @@
 import { Request, Response } from "express"
-import { IUser, User } from "../models/user.model"
 import { IWork, Work } from "../models/work.model"
 
 export default {
-  async createWork(req: Request<{ user?: IUser; body: IWork }>, res: Response) {
+  async createWork(
+    req: Request<{ body: IWork; characterId: String }>,
+    res: Response
+  ) {
     try {
       const { name, description, start_date, due_date, status } = req.body
-      const userId = req.user?._id
+      const { characterId } = req.params
 
       const newWork = await Work.create({
-        userId,
+        characterId,
         name,
         description,
         start_date,
@@ -17,17 +19,13 @@ export default {
         status
       })
 
-      await User.findByIdAndUpdate(userId, {
-        $push: { works: newWork._id }
-      })
-
       res.status(201).json({
-        message: "สร้างงานใหม่สำเร็จ!",
+        message: "Work created successfully!",
         work: newWork
       })
     } catch (error) {
       console.error(error)
-      res.status(500).json({ error: "เกิดข้อผิดพลาดภายในเซิร์ฟเวอร์" })
+      res.status(500).json({ error: "Internal server error" })
     }
   },
 
@@ -46,41 +44,36 @@ export default {
       )
 
       if (!updatedWork) {
-        return res.status(404).json({ error: "ไม่พบงานที่ต้องการอัปเดต" })
+        return res.status(404).json({ error: "Work not found" })
       }
 
       res.status(200).json({
-        message: "อัปเดตงานสำเร็จ!",
+        message: "Work updated successfully!",
         work: updatedWork
       })
     } catch (error) {
       console.error(error)
-      res.status(500).json({ error: "เกิดข้อผิดพลาดภายในเซิร์ฟเวอร์" })
+      res.status(500).json({ error: "Internal server error" })
     }
   },
 
   async deleteWork(req: Request<{ workId: string }>, res: Response) {
     try {
       const { workId } = req.params
-      const userId = req.user?.userId
 
       const deletedWork = await Work.findByIdAndDelete(workId)
 
       if (!deletedWork) {
-        return res.status(404).json({ error: "ไม่พบงานที่ต้องการลบ" })
+        return res.status(404).json({ error: "Work not found" })
       }
 
-      await User.findByIdAndUpdate(userId, {
-        $pull: { works: workId }
-      })
-
       res.status(200).json({
-        message: "ลบงานสำเร็จ!",
+        message: "Work deleted successfully!",
         work: deletedWork
       })
     } catch (error) {
       console.error(error)
-      res.status(500).json({ error: "เกิดข้อผิดพลาดภายในเซิร์ฟเวอร์" })
+      res.status(500).json({ error: "Internal server error" })
     }
   },
 
@@ -90,25 +83,25 @@ export default {
       const work = await Work.findById(workId)
 
       if (!work) {
-        return res.status(404).json({ error: "ไม่พบงานที่ต้องการดู" })
+        return res.status(404).json({ error: "Work not found" })
       }
 
       res.status(200).json({ work })
     } catch (error) {
       console.error(error)
-      res.status(500).json({ error: "เกิดข้อผิดพลาดภายในเซิร์ฟเวอร์" })
+      res.status(500).json({ error: "Internal server error" })
     }
   },
 
-  async getAllWorks(req: Request<{ user?: IUser }>, res: Response) {
+  async getAllWorks(req: Request<{ characterId: String }>, res: Response) {
     try {
-      const userId = req.user?.userId
-      const works = await Work.find({ userId })
+      const { characterId } = req.params
+      const works = await Work.find({ characterId })
 
       res.status(200).json({ works })
     } catch (error) {
       console.error(error)
-      res.status(500).json({ error: "เกิดข้อผิดพลาดภายในเซิร์ฟเวอร์" })
+      res.status(500).json({ error: "Internal server error" })
     }
   }
 }

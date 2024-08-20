@@ -6,7 +6,7 @@ export interface IWork extends Document {
   description?: string
   start_date?: Date
   due_date?: Date
-  status: "todo" | "inprogress" | "done"
+  status?: "todo" | "inprogress" | "done"
   createdAt: Date
   updatedAt: Date
 }
