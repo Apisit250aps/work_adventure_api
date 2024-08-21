@@ -1,5 +1,6 @@
 import { Response, Request } from "express"
 import { User, IUser } from "../models/user.model"
+import { IUserStatistics, UserStatistics } from "../models/userStatistic.model"
 
 const userPipeline = (match: {}) => [
   {
@@ -47,7 +48,7 @@ const userPipeline = (match: {}) => [
           input: "$characters",
           as: "character",
           in: {
-            _id:"$$character._id",
+            _id: "$$character._id",
             name: "$$character.name",
             exp: "$$character.exp",
             level: "$$character.level",
@@ -71,7 +72,13 @@ async function updateUser(req: Request<{ body: IUser }>, res: Response) {
       return res.status(400).json({ error: "User ID is missing" })
     }
 
-    const result = await User.findOneAndUpdate({ userId }, { new: true })
+    const result = await User.findOneAndUpdate(
+      { userId },
+      { ...req.body },
+      {
+        new: true
+      }
+    )
 
     if (!result) {
       return res.status(404).json({ error: "User not found" })
@@ -104,6 +111,26 @@ async function deleteUser(req: Request, res: Response) {
   }
 }
 
+async function userStatisticUpdate(
+  req: Request<{ body: IUserStatistics; userStatisticId: String }>,
+  res: Response
+) {
+  try {
+    const { userStatisticId } = req.params
+    await UserStatistics.findByIdAndUpdate(
+      { _id:userStatisticId },
+      { ...req.body },
+      { new: true }
+    ).then((result) => {
+      if (result) {
+        res.status(200).json({ result })
+      }
+    })
+  } catch (error) {
+    res.status(500).json({ error })
+  }
+}
+
 async function userData(req: Request, res: Response) {
   try {
     console.log(req.user?.id)
@@ -121,5 +148,6 @@ async function userData(req: Request, res: Response) {
 export default {
   updateUser,
   deleteUser,
-  userData
+  userData,
+  userStatisticUpdate
 }
