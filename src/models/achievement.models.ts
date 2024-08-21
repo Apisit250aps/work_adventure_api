@@ -29,4 +29,4 @@ AchievementSchema.pre("save", function (next) {
   next();
 });
 
-export default mongoose.model<IAchievement>("Achievement", AchievementSchema);
+export const Achievement = mongoose.model<IAchievement>("Achievement", AchievementSchema);
