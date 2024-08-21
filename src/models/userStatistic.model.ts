@@ -3,10 +3,10 @@ import { ObjectId } from "mongodb"
 
 // Interface extending Document to include Mongoose document properties
 export interface IUserStatistics extends Document {
-  userId?: ObjectId
-  totalExp: number
-  totalCoin: number
-  totalQuests: number
+  userId: ObjectId
+  totalExp?: number
+  totalCoin?: number
+  totalQuests?: number
   totalAchievements?: number
   createdAt: Date
   updatedAt: Date
@@ -14,7 +14,7 @@ export interface IUserStatistics extends Document {
 
 // Define the Mongoose schema for user statistics
 const UserStatisticsSchema = new Schema<IUserStatistics>({
-  userId: { type: Schema.Types.ObjectId, ref: "User", required: false },
+  userId: { type: Schema.Types.ObjectId, ref: "User", required: true },
   totalExp: { type: Number, required: true, default: 0 },
   totalCoin: { type: Number, required: true, default: 0 },
   totalQuests: { type: Number, required: true, default: 0 },

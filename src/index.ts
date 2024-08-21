@@ -4,6 +4,5 @@ import connectDB from "./configs/db.config"
 
 app.listen(port, () => {
   connectDB()
-  console.log("Hello");
   console.log(`Server listen on http://localhost:${port}/`)
 })
