@@ -92,7 +92,7 @@ export default {
     }
   },
 
-  async getAllQuests(req: Request, res: Response) {
+  async getAllQuests(req: Request<{ questId: string}>, res: Response) {
     try {
       const quests = await Quest.find();
 
