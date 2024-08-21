@@ -1,0 +1,34 @@
+import mongoose, { Schema, Document, Types } from "mongoose"
+
+export interface ITask extends Document {
+  taskId?: Types.ObjectId
+  name: string
+  description?: string
+  difficulty: Number
+  start_date?: Date
+  due_date?: Date
+  status?: "todo" | "inprogress" | "done"
+  workId?: Types.ObjectId
+  createdAt: Date
+  updatedAt: Date
+}
+
+const TaskSchema = new Schema<ITask>(
+    {
+      taskId: { type: Schema.Types.ObjectId, auto: true },
+      name: { type: String, required: true },
+      description: { type: String },
+      difficulty: { type: Number, required: false , default: 1},
+      start_date: { type: Date, required: false },
+      due_date: { type: Date, required: false },
+      status: { type: String, enum: ['todo', 'inprogress', 'done'], default: 'todo' },
+      workId: { type: Schema.Types.ObjectId, ref: "Work" },
+    },
+    {
+      timestamps: true, // Automatically adds `createdAt` and `updatedAt` fields
+    }
+  );
+  
+  export const Task = mongoose.model<ITask>('Task', TaskSchema);
+  
+   
