@@ -2,6 +2,7 @@
 
 import { Request, Response } from "express";
 import { ICharacter, Character } from "../models/character.model";
+import { ISpecial, Special } from "../models/special.model";
 import { IUser } from "../models/user.model";
 
 export default {
@@ -15,13 +16,24 @@ export default {
       if (!userId) {
         return res.status(401).json({ error: "Unauthorized" });
       }
+
       const newCharacter = await Character.create({
         name,
         userId: userId,
         createdAt: new Date(),
         updatedAt: new Date(),
       });
-      return res.status(201).json(newCharacter);
+
+      // Create a new Special associated with this character
+      const newSpecial = await Special.create({
+        characterId: newCharacter._id, // Assuming you have a characterId field in Special schema
+        // Add any additional default properties or values if required by Special
+      });
+
+      return res.status(201).json({
+        character: newCharacter,
+        special: newSpecial, // Include the newly created special data in the response if needed
+      });
     } catch (error) {
       return res.status(500).json({ error });
     }

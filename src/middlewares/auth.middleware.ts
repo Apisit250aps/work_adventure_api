@@ -1,6 +1,7 @@
 import { Response, NextFunction } from "express"
 import { verifyToken } from "../utils/jwt"
 import { IUser, User } from "../models/user.model"
+import { ICharacter } from "../models/character.model";
 
 declare global {
   namespace Express {
@@ -9,6 +10,17 @@ declare global {
       headers: {
         authorization?: string
       }
+    }
+  }
+}
+
+declare global {
+  namespace Express {
+    interface Request {
+      character?: ICharacter; // Add optional user property
+      headers: {
+        authorization?: string;
+      };
     }
   }
 }
