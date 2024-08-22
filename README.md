@@ -310,13 +310,13 @@ erDiagram
 
 **Acceptance Criteria:**
 
-- [ ] ผู้ใช้สามารถดูข้อมูลโปรไฟล์ของตนเอง
+- [X] ผู้ใช้สามารถดูข้อมูลโปรไฟล์ของตนเอง
 - [ ] ผู้ใช้สามารถอัปเดตข้อมูลโปรไฟล์ เช่น username, email
 - [ ] ผู้ใช้สามารถเปลี่ยนรหัสผ่าน
 
 **Tasks:**
 
-- [ ] พัฒนา API สำหรับการดูโปรไฟล์ (`/profile`)
+- [X] พัฒนา API สำหรับการดูโปรไฟล์ (`/profile`)
 - [ ] พัฒนา API สำหรับการอัปเดตโปรไฟล์ (`/profile/update`)
 - [ ] พัฒนา API สำหรับการเปลี่ยนรหัสผ่าน (`/profile/change-password`)
 
@@ -328,16 +328,16 @@ erDiagram
 
 **Acceptance Criteria:**
 
-- [ ] ผู้ใช้สามารถสร้างตัวละครได้สูงสุด 3 ตัว
-- [ ] ตัวละครมีค่าเริ่มต้นเช่น exp, level, coin, health, stamina, focus point
+- [X] ผู้ใช้สามารถสร้างตัวละครได้สูงสุด 3 ตัว
+- [X] ตัวละครมีค่าเริ่มต้นเช่น exp, level, coin, health, stamina, focus point
 - [ ] ตรวจสอบว่าไม่มีการสร้างตัวละครเกิน 3 ตัว
 
 **Tasks:**
 
-- [ ] สร้างโครงสร้างฐานข้อมูลสำหรับตัวละคร
-- [ ] พัฒนา API สำหรับการสร้างตัวละคร (`/character/create`)
-- [ ] พัฒนา API สำหรับการดูตัวละคร (`/character/list`)
-- [ ] พัฒนา API สำหรับการอัปเดตข้อมูลตัวละคร (`/character/update`)
+- [X] สร้างโครงสร้างฐานข้อมูลสำหรับตัวละคร
+- [X] พัฒนา API สำหรับการสร้างตัวละคร (`/character/create`)
+- [X] พัฒนา API สำหรับการดูตัวละคร (`/character/list`)
+- [X] พัฒนา API สำหรับการอัปเดตข้อมูลตัวละคร (`/character/update`)
 
 **Labels:** `Backend`, `Character Management`
 
@@ -364,16 +364,16 @@ erDiagram
 
 **Acceptance Criteria:**
 
-- [ ] ผู้ใช้สามารถสร้างงานได้สูงสุด 3 งาน
-- [ ] แต่ละงานสามารถมีภารกิจย่อยได้สูงสุด 10 ภารกิจ
-- [ ] การจัดการวันเริ่มต้น, วันสิ้นสุด, และความยากของภารกิจ
+- [X] ผู้ใช้สามารถสร้างงานได้สูงสุด 3 งาน
+- [X] แต่ละงานสามารถมีภารกิจย่อยได้สูงสุด 10 ภารกิจ
+- [X] การจัดการวันเริ่มต้น, วันสิ้นสุด, และความยากของภารกิจ
 
 **Tasks:**
 
-- [ ] สร้างโครงสร้างฐานข้อมูลสำหรับงานและภารกิจ
-- [ ] พัฒนา API สำหรับการสร้างงาน (`/work/create`)
-- [ ] พัฒนา API สำหรับการสร้างภารกิจ (`/work/:workId/task/create`)
-- [ ] พัฒนา API สำหรับการอัปเดตสถานะภารกิจ (`/task/update-status`)
+- [X] สร้างโครงสร้างฐานข้อมูลสำหรับงานและภารกิจ
+- [X] พัฒนา API สำหรับการสร้างงาน (`/work/create`)
+- [X] พัฒนา API สำหรับการสร้างภารกิจ (`/work/:workId/task/create`)
+- [X] พัฒนา API สำหรับการอัปเดตสถานะภารกิจ (`/task/update-status`)
 
 **Labels:** `Backend`, `Work Management`
 
@@ -437,12 +437,12 @@ erDiagram
 **Acceptance Criteria:**
 
 - [ ] ผู้ใช้สามารถเข้าร่วมเควสประจำวันและสัปดาห์ได้
-- [ ] ระบบจะตรวจสอบเงื่อนไขความสำเร็จและมอบรางวัลเมื่อเควสสำเร็จ
+- [X] ระบบจะตรวจสอบเงื่อนไขความสำเร็จและมอบรางวัลเมื่อเควสสำเร็จ
 - [ ] เควสจะรีเฟรชทุกวันและสัปดาห์
 
 **Tasks:**
 
-- [ ] สร้างโครงสร้างฐานข้อมูลสำหรับเควส
+- [X] สร้างโครงสร้างฐานข้อมูลสำหรับเควส
 - [ ] พัฒนา API สำหรับการสร้างและจัดการเควส (`/quest/daily`, `/quest/weekly`)
 - [ ] พัฒนา API สำหรับการตรวจสอบเงื่อนไขความสำเร็จ (`/quest/check`)
 
@@ -454,14 +454,14 @@ erDiagram
 
 **Acceptance Criteria:**
 
-- [ ] ระบบจะเก็บข้อมูลสถิติ เช่น เวลาที่ใช้ในโหมดโฟกัส, จำนวนงานที่ทำเสร็จ, จำนวนเควสที่สำเร็จ
-- [ ] ผู้ใช้สามารถดูสถิติโดยรวมของตนเองและตัวละครได้
+- [X] ระบบจะเก็บข้อมูลสถิติ เช่น เวลาที่ใช้ในโหมดโฟกัส, จำนวนงานที่ทำเสร็จ, จำนวนเควสที่สำเร็จ
+- [X] ผู้ใช้สามารถดูสถิติโดยรวมของตนเองและตัวละครได้
 
 **Tasks:**
 
-- [ ] สร้างโครงสร้างฐานข้อมูลสำหรับสถิติ
-- [ ] พัฒนา API สำหรับการดูสถิติผู้ใช้ (`/stats/user`)
-- [ ] พัฒนา API สำหรับการดูสถิติตัวละคร (`/stats/character`)
+- [X] สร้างโครงสร้างฐานข้อมูลสำหรับสถิติ
+- [X] พัฒนา API สำหรับการดูสถิติผู้ใช้ (`/stats/user`)
+- [X] พัฒนา API สำหรับการดูสถิติตัวละคร (`/stats/character`)
 
 **Labels:** `Backend`, `Analytics`
 
@@ -488,3 +488,64 @@ erDiagram
 ---
 
 การแบ่ง Issues เหล่านี้จะช่วยให้การพัฒนา Backend ของโปรเจกต์เป็นระบบและสามารถติดตามความคืบหน้าได้ง่ายขึ้นครับ
+
+### UI Flow Design for To-Do List Application with RPG System
+
+1. **Login/Registration UI**
+
+   - **Login Screen:** Fields for Username/Email and Password, along with buttons for "Login" and "Register."
+   - **Registration Screen:** Fields for Username, Email, Password, and a "Register" button.
+   - **Forgot Password Screen:** Option to reset the password via email.
+2. **Main Dashboard UI**
+
+   - **User Info Section:** Display user's name, email, total EXP, and level.
+   - **Character Selection:** Interface to select or create up to 3 characters. Shows basic stats for each character (name, level, health, stamina).
+   - **Quick Access Menu:** Shortcuts to Daily/Weekly Quests, Achievements, and Shop.
+3. **Character Management UI**
+
+   - **Character Creation Screen:** Fields for character name and initial stat allocation (str, int, end, agi, dex).
+   - **Character Overview Screen:** Detailed stats, equipped items, EXP bar, and buttons for "Upgrade" and "View Stats."
+   - **Character Upgrade UI:** Allows allocation of earned points to different stats (strength, intelligence, endurance, agility, dexterity).
+4. **Work Management UI**
+
+   - **Work List Screen:** Displays active works, with the ability to create a new work or delete existing ones.
+   - **Work Detail Screen:** Shows work details (name, description, start date, due date) and lists associated tasks.
+5. **Task Management UI**
+
+   - **Task List Screen:** Display tasks under a specific work, with options to create, edit, or delete tasks.
+   - **Task Detail Screen:** Shows task details (name, description, difficulty, start date, due date) and status (completed/not completed).
+6. **Focus Mode UI**
+
+   - **Focus Mode Activation Screen:** Option to activate Focus Mode, showing current focus points.
+   - **Focus Mode Screen:** A minimalist UI with a timer, task progress, and remaining focus points.
+7. **Daily/Weekly Quests UI**
+
+   - **Quest List Screen:** Displays active daily/weekly quests with descriptions and rewards.
+   - **Quest Completion Screen:** Summary of completed quests and rewards earned (EXP, coins, items).
+8. **Shop UI**
+
+   - **Shop Screen:** Displays items available for purchase, including their cost and effects.
+   - **Inventory Screen:** Shows owned items and options to equip/use them.
+9. **Achievement UI**
+
+   - **Achievement List Screen:** Displays a list of achievements with their status (completed/incomplete).
+   - **Achievement Detail Screen:** Shows the progress towards specific achievements and the rewards earned upon completion.
+10. **Statistics UI**
+
+    - **User Stats Screen:** Displays overall statistics like total tasks completed, total EXP, total coins earned.
+    - **Character Stats Screen:** Displays detailed statistics for each character, such as total work completed, level progress, and focus point usage.
+11. **Settings UI**
+
+    - **General Settings:** Options for notifications, sound, and language preferences.
+    - **Account Settings:** Options to change password, email, or delete account.
+
+### Navigation Flow
+
+- **Login/Registration -> Main Dashboard**
+- **Main Dashboard -> Character Management / Work Management / Daily Quests / Shop / Achievements / Stats / Settings**
+- **Work Management -> Task Management -> Task Details**
+- **Character Management -> Character Overview -> Character Upgrade**
+- **Shop -> Purchase Confirmation -> Inventory**
+- **Focus Mode -> Work/Task Screen**
+
+This flow ensures all requirements are covered, providing easy access to key features while maintaining a clean and organized UI structure.
