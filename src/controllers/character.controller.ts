@@ -26,7 +26,7 @@ export default {
 
       // Create a new Special associated with this character
       const newSpecial = await Special.create({
-        characterId: newCharacter._id, // Assuming you have a characterId field in Special schema
+        charId: newCharacter._id, // Assuming you have a characterId field in Special schema
         // Add any additional default properties or values if required by Special
       });
 
