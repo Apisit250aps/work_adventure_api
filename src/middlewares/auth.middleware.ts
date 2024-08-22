@@ -14,16 +14,6 @@ declare global {
   }
 }
 
-declare global {
-  namespace Express {
-    interface Request {
-      character?: ICharacter; // Add optional user property
-      headers: {
-        authorization?: string;
-      };
-    }
-  }
-}
 
 export const authenticateJWT = async (
   req: Express.Request,
