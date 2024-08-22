@@ -4,6 +4,7 @@ import { Request, Response } from "express";
 import { ICharacter, Character } from "../models/character.model";
 import { ISpecial, Special } from "../models/special.model";
 import { IUser } from "../models/user.model";
+import { CharacterStatistics } from "../models/characterStatistic.model";
 
 export default {
   async createCharacter(
@@ -24,6 +25,9 @@ export default {
         updatedAt: new Date(),
       });
 
+      const newCharacterStatistics = await CharacterStatistics.create({
+        characterId: newCharacter._id,
+      });
       // Create a new Special associated with this character
       const newSpecial = await Special.create({
         charId: newCharacter._id, // Assuming you have a characterId field in Special schema
@@ -32,7 +36,8 @@ export default {
 
       return res.status(201).json({
         character: newCharacter,
-        special: newSpecial, // Include the newly created special data in the response if needed
+        special: newSpecial,
+         // Include the newly created special data in the response if needed
       });
     } catch (error) {
       return res.status(500).json({ error });
