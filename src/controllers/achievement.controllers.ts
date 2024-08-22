@@ -1,15 +1,11 @@
 import { Request, Response } from "express"
 import { IAchievement, Achievement } from "../models/achievement.models"
 import { ObjectId } from "mongoose";
-import work from '../routers/work.route';
-import { error } from "console";
-
 
 export default {
     async createWork(
         req: Request<{ body: IAchievement; achievementId: ObjectId }>,
         res: Response
-
     ) {
         try {
             const { name, description, criteria, userId, achieveAt } = req.body
@@ -22,7 +18,6 @@ export default {
                 criteria,
                 userId,
                 achieveAt
-
             })
 
             res.status(201).json({
@@ -31,7 +26,7 @@ export default {
             })
         } catch (error) {
             console.error(error)
-            res.status(500).json({ error: "error" })
+            res.status(500).json({ error: "Internal server error" })
         }
     },
 
@@ -39,33 +34,72 @@ export default {
         req: Request<{ achieveId: string; body: IAchievement }>,
         res: Response
     ) {
-
         try {
-            const { name, description, criteria, userId, achieveAt } = req.body
             const { achieveId } = req.params
 
-            const getAchievement = await Achievement.findByIdAndUpdate(
-                achieveId,
-                { name, description, criteria, userId, achieveAt },
-                { new: true }
-            )
+            const getAchievement = await Achievement.findById(achieveId)
 
             if (!getAchievement) {
-                return res.status(404).json({ error: "achieve not found" })
+                return res.status(404).json({ error: "Achievement not found" })
             }
 
-            res.status(202).json({
-                message: "achieve success!",
+            res.status(200).json({
+                message: "Achievement retrieved successfully!",
                 work: getAchievement
             })
         } catch (error) {
             console.error(error)
             res.status(500).json({ error: "Internal server error" })
         }
+    },
 
+    async updateAchieve(
+        req: Request<{ achieveId: string; body: IAchievement }>,
+        res: Response
+    ) {
+        try {
+            const { name, description, criteria, userId, achieveAt } = req.body
+            const { achieveId } = req.params
 
+            const updateAchieve = await Achievement.findByIdAndUpdate(
+                achieveId,
+                { name, description, criteria, userId, achieveAt },
+                { new: true }
+            )
+
+            if (!updateAchieve) {
+                return res.status(404).json({ error: "Achievement not found" })
+            }
+            res.status(200).json({
+                message: "Achievement updated successfully!",
+                work: updateAchieve
+            })
+        } catch (error) {
+            console.error(error)
+            res.status(500).json({ error: "Internal server error" })
+        }
+    },
+
+    async deleteAchievement(
+        req: Request<{ achieveId: string }>,
+        res: Response
+    ) {
+        try {
+            const { achieveId } = req.params
+
+            const deletedAchievement = await Achievement.findByIdAndDelete(achieveId)
+
+            if (!deletedAchievement) {
+                return res.status(404).json({ error: "Achievement not found" })
+            }
+
+            res.status(200).json({
+                message: "Achievement deleted successfully!",
+                work: deletedAchievement
+            })
+        } catch (error) {
+            console.error(error)
+            res.status(500).json({ error: "Internal server error" })
+        }
     }
-
-
-
 }
