@@ -1,6 +1,7 @@
 import { Response, NextFunction } from "express"
 import { verifyToken } from "../utils/jwt"
 import { IUser, User } from "../models/user.model"
+import { ICharacter } from "../models/character.model";
 
 declare global {
   namespace Express {
@@ -12,6 +13,7 @@ declare global {
     }
   }
 }
+
 
 export const authenticateJWT = async (
   req: Express.Request,
