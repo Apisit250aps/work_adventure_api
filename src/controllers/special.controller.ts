@@ -5,32 +5,36 @@ import { ISpecial, Special } from "../models/special.model";
 import { IUser } from "../models/user.model";
 
 export default {
-  async specials(
-    req: Request<
-      { characterId: string },
-      {},
-      { attribute: keyof ISpecial; value: number },
-      { user?: IUser }
-    >,
+  async Updatespecials(
+    req: Request<{
+      user?: IUser;
+      body: ISpecial;
+      charId: string;
+    }>,
     res: Response
   ) {
     try {
       const userId = req.user?._id;
-      const { characterId } = req.params; // characterId from the URL
-      const { attribute, value } = req.body;
+      if (!userId) {
+        return res.status(401).json({ error: "Unauthorized" });
+      }
 
-      // Find the special by ID and characterId
-      const special = await Special.findOne({ characterId });
-      console.log("characterId : ", characterId);
+      const { charId } = req.params; // Get charId from the URL
+      const { attribute, value }: { attribute: keyof ISpecial; value: number } =
+        req.body;
+
+      // Find the special by charId
+      const special = await Special.findOne({ charId });
 
       // Check if the special exists
       if (!special) {
-        return res.status(404).json({ message: "Special not found" });
+        return res.status(404).json({ error: "Special not found" });
       }
 
-      // Verify if the userId matches the userId in the character
-      if (special.charId.toString() !== characterId) {
-        return res.status(403).json({ message: "Forbidden" });
+      // Verify if the character associated with this special belongs to the authenticated user
+      if (special.charId.toString() !== charId) {
+        // Assuming you have userId in Special schema
+        return res.status(403).json({ error: "Forbidden" });
       }
 
       // Prepare the update data
@@ -38,17 +42,17 @@ export default {
 
       // Update the special
       const updatedSpecial = await Special.findOneAndUpdate(
-        { charId: characterId }, // Filter by characterId
+        { charId }, // Filter by charId
         updateData, // Data to update
-        {
-          new: true, // Return the updated document
-        }
+        { new: true } // Return the updated document
       );
 
       // Return the updated special
       return res.status(200).json(updatedSpecial);
     } catch (error) {
-      return res.status(500).json({ error });
+      return res
+        .status(500)
+        .json({ error: error || "An unexpected error occurred" });
     }
   },
 };

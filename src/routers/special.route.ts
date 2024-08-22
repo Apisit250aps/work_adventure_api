@@ -8,6 +8,6 @@ const auth = authenticateJWT;
 
 const special = Router();
 
-special.put("/update/:id", auth, specialController.specials);
+special.put("/update/:charId", auth, specialController.Updatespecials);
 
 export default special;
