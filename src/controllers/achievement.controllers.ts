@@ -3,7 +3,7 @@ import { IAchievement, Achievement } from "../models/achievement.models"
 import { ObjectId } from "mongoose";
 
 export default {
-    async createWork(
+    async createAchieve(
         req: Request<{ body: IAchievement; achievementId: ObjectId }>,
         res: Response
     ) {
