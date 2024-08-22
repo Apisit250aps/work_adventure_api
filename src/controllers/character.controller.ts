@@ -2,7 +2,7 @@
 
 import { Request, Response } from "express";
 import { ICharacter, Character } from "../models/character.model";
-import { ISpecial, Special } from "../models/special.model";
+import { Special } from "../models/special.model";
 import { IUser } from "../models/user.model";
 
 export default {
@@ -11,7 +11,7 @@ export default {
     res: Response
   ) {
     try {
-      const { name } = req.body;
+      const { name, className }: { name: string; className: string } = req.body;
       const userId = req.user?._id;
       if (!userId) {
         return res.status(401).json({ error: "Unauthorized" });
@@ -20,6 +20,7 @@ export default {
       const newCharacter = await Character.create({
         name,
         userId: userId,
+        className,
         createdAt: new Date(),
         updatedAt: new Date(),
       });

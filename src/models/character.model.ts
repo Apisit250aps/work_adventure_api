@@ -7,6 +7,7 @@ export interface ICharacter extends Document {
   charId?: ObjectId;
   userId: Types.ObjectId;
   name: string;
+  className: string;
   exp?: number;
   level?: number;
   coin?: number;
@@ -25,6 +26,10 @@ const CharacterSchema: Schema<ICharacter> = new Schema(
       ref: "User",
     },
     name: {
+      type: String,
+      required: true,
+    },
+    className: {
       type: String,
       required: true,
     },
