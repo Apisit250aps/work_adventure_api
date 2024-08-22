@@ -8,7 +8,7 @@ export default {
         res: Response
     ) {
         try {
-            const { name, description, criteria, userId, achieveAt } = req.body
+            const { name, description, criteria,achieveAt } = req.body
             const { achievementId } = req.params
 
             const newAchievement = await Achievement.create({
@@ -16,7 +16,6 @@ export default {
                 name,
                 description,
                 criteria,
-                userId,
                 achieveAt
             })
 
@@ -58,12 +57,12 @@ export default {
         res: Response
     ) {
         try {
-            const { name, description, criteria, userId, achieveAt } = req.body
+            const { name, description, criteria, achieveAt } = req.body
             const { achieveId } = req.params
 
             const updateAchieve = await Achievement.findByIdAndUpdate(
                 achieveId,
-                { name, description, criteria, userId, achieveAt },
+                { name, description, criteria, achieveAt },
                 { new: true }
             )
 
