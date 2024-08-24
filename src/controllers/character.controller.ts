@@ -5,7 +5,7 @@ import { ICharacter, Character } from "../models/character.model";
 import { Special } from "../models/special.model";
 import { IUser } from "../models/user.model";
 import { CharacterStatistics } from "../models/characterStatistic.model";
-import { levelUp } from "../rules/character.rule"; // นำเข้า levelUp
+import { levelCalculator } from "../rules/character.rule"; // นำเข้า levelCalculator
 
 export default {
   async createCharacter(
@@ -52,41 +52,58 @@ export default {
   },
 
   async updateCharacter(
-  req: Request<{
-    user?: IUser;
-    body: ICharacter;
-    charId: string;
-  }>,
-  res: Response
-) {
-  try {
-    const { charId } = req.params;
-    const { exp, ...restOfBody } = req.body;
+    req: Request<{
+      user?: IUser;
+      body: ICharacter;
+      charId: string;
+    }>,
+    res: Response
+  ) {
+    try {
+      const { charId } = req.params;
+      const { exp, ...restOfBody } = req.body;
 
-    // ดึงข้อมูลตัวละครจากฐานข้อมูลเพื่อใช้ค่า EXP เดิม
-    const character = await Character.findById(charId);
-    if (!character) {
-      return res.status(404).json({ error: "Character not found" });
+      // ดึงข้อมูลตัวละครจากฐานข้อมูลเพื่อใช้ค่า EXP เดิม
+      const character = await Character.findById(charId);
+      if (!character) {
+        return res.status(404).json({ error: "Character not found" });
+      }
+
+      // ดึงข้อมูลจากตาราง Special
+      const special = await Special.findOne({ charId: charId });
+      if (!special) {
+        return res.status(404).json({ error: "Special data not found" });
+      }
+
+      // เพิ่ม EXP ใหม่เข้ากับ EXP เดิมที่มีอยู่
+      const updatedExp = (character.exp || 0) + (exp as number);
+
+      // คำนวณเลเวลใหม่จาก EXP ที่เพิ่มแล้วและ luck
+      const { newLevel, specialPoint } = await levelCalculator(
+        updatedExp,
+        character.level || 1,
+        special.luck || 0
+      );
+
+      // อัปเดต specialPoint หากมีการคำนวณพิเศษ
+      const updatedPoint = (character.point as number) + specialPoint;
+      // อัปเดตข้อมูลตัวละครรวมถึง EXP, เลเวลใหม่ และอื่นๆ
+      const updatedCharacter = await Character.findByIdAndUpdate(
+        charId,
+        {
+          ...restOfBody,
+          exp: updatedExp,
+          level: newLevel,
+          point: updatedPoint,
+        }, // เพิ่มค่า EXP และ level ที่คำนวณได้เข้าไปใน body
+        { new: true }
+      );
+
+      return res.json({ updatedCharacter });
+    } catch (error) {
+      return res.status(500).json({ error });
     }
-
-    // เพิ่ม EXP ใหม่เข้ากับ EXP เดิมที่มีอยู่
-    const updatedExp = (character.exp || 0) + (exp || 0);
-
-    // คำนวณเลเวลใหม่จาก EXP ที่เพิ่มแล้ว
-    const level = await levelUp(updatedExp);
-
-    // อัปเดตข้อมูลตัวละครรวมถึง EXP และเลเวลใหม่
-    const updatedCharacter = await Character.findByIdAndUpdate(
-      charId,
-      { ...restOfBody, exp: updatedExp, level }, // เพิ่มค่า EXP และ level ที่คำนวณได้เข้าไปใน body
-      { new: true }
-    );
-
-    return res.json(updatedCharacter);
-  } catch (error) {
-    return res.status(500).json({ error });
-  }
-},
+  },
 
   async deleteCharacter(
     req: Request<{ user?: IUser; charId: string }>,
