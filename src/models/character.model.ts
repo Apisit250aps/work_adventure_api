@@ -13,6 +13,7 @@ export interface ICharacter extends Document {
   coin?: number;
   health?: number;
   stamina?: number;
+  point?: number;
   focus_point?: number;
   createdAt: Date;
   updatedAt: Date;
@@ -52,6 +53,10 @@ const CharacterSchema: Schema<ICharacter> = new Schema(
     stamina: {
       type: Number,
       default: 100,
+    },
+    point: {
+      type: Number,
+      default: 0,
     },
     focus_point: {
       type: Number,
