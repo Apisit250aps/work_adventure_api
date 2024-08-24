@@ -6,8 +6,8 @@ import { UserStatistics } from "../models/userStatistic.model"
 export default {
   async userRegister(req: Request<{ body: IUser }>, res: Response) {
     try {
-      const { username, password } = req.body
-
+      const { username, password, email } = req.body
+      console.log(req.body)
       const existingUser = await User.findOne({ username: username })
       if (existingUser) {
         return res.status(409).json({ error: "Username already exists" })
@@ -16,7 +16,8 @@ export default {
       const hashedPassword = await hashPassword(password)
       const newUser = await User.create({
         username: username,
-        password: hashedPassword
+        password: hashedPassword,
+        email: email
       })
 
       await UserStatistics.create({ userId: newUser })
@@ -53,6 +54,13 @@ export default {
       return res.status(200).json({ token })
     } catch (error) {
       console.error(error)
+      return res.status(500).json({ error })
+    }
+  },
+  async checkAuth(req: Request, res: Response) {
+    try {
+      return res.status(200).json({})
+    } catch (error) {
       return res.status(500).json({ error })
     }
   }

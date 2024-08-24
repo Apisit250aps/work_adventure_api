@@ -52,6 +52,7 @@ const userPipeline = (match: {}) => [
             name: "$$character.name",
             exp: "$$character.exp",
             level: "$$character.level",
+            className: "$$character.className",
             coin: "$$character.coin",
             health: "$$character.health",
             stamina: "$$character.stamina",
