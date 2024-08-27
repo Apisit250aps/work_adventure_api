@@ -6,7 +6,7 @@ export interface ITask extends Document {
   difficulty: 1 | 2 | 3
   start_date?: Date
   due_date?: Date
-  status?: "todo" | "inprogress" | "done"
+  isDone?: boolean
   workId?: Types.ObjectId
   createdAt: Date
   updatedAt: Date
@@ -19,11 +19,7 @@ const TaskSchema = new Schema<ITask>(
     difficulty: { type: Number, required: false, enum: [1, 2, 3], default: 1 },
     start_date: { type: Date, required: false },
     due_date: { type: Date, required: false },
-    status: {
-      type: String,
-      enum: ["todo", "inprogress", "done"],
-      default: "todo"
-    },
+    isDone: { type: Boolean, default: false },
     workId: { type: Schema.Types.ObjectId, ref: "Work" }
   },
   {

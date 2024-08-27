@@ -28,7 +28,7 @@ export default {
     res: Response
   ) {
     try {
-      const { taskId, workId } = req.params
+      const { taskId } = req.params
 
       const updatedTask = await Task.findByIdAndUpdate(
         taskId,
@@ -50,10 +50,7 @@ export default {
     }
   },
 
-  async deleteTask(
-    req: Request<{ taskId: string;  }>,
-    res: Response
-  ) {
+  async deleteTask(req: Request<{ taskId: string }>, res: Response) {
     try {
       const { taskId } = req.params
 
@@ -89,9 +86,10 @@ export default {
     }
   },
 
-  async getAllTasks(req: Request, res: Response) {
+  async getAllTasks(req: Request<{ workId: string }>, res: Response) {
     try {
-      const tasks = await Task.find()
+      const { workId } = req.params
+      const tasks = await Task.find({ workId })
 
       res.status(200).json({ tasks })
     } catch (error) {

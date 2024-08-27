@@ -1,5 +1,50 @@
 import { Request, Response } from "express"
 import { IWork, Work } from "../models/work.model"
+import mongoose from "mongoose"
+
+const workPipeline = (match: Record<string, unknown> = {}) => [
+  {
+    $match: match
+  },
+  {
+    $lookup: {
+      from: "tasks",
+      localField: "_id",
+      foreignField: "workId",
+      as: "tasks"
+    }
+  },
+  {
+    $project: {
+      _id: 1,
+      characterId: 1,
+      name: 1,
+      description: 1,
+      start_date: 1,
+      due_date: 1,
+      status: 1,
+      createdAt: 1,
+      updatedAt: 1,
+      tasks: {
+        $map: {
+          input: "$tasks",
+          as: "task",
+          in: {
+            _id: "$$task._id",
+            name: "$$task.name",
+            description: "$$task.description",
+            difficulty: "$$task.difficulty",
+            start_date: "$$task.start_date",
+            due_date: "$$task.due_date",
+            isDone: "$$task.isDone",
+            createdAt: "$$task.createdAt",
+            updatedAt: "$$task.updatedAt"
+          }
+        }
+      }
+    }
+  }
+]
 
 export default {
   async createWork(
@@ -80,25 +125,32 @@ export default {
   async getWork(req: Request<{ workId: string }>, res: Response) {
     try {
       const { workId } = req.params
-      const work = await Work.findById(workId)
+      const pipeline = workPipeline({
+        _id: new mongoose.Types.ObjectId(workId)
+      })
+      const result = await Work.aggregate(pipeline).exec()
 
-      if (!work) {
+      if (!result) {
         return res.status(404).json({ error: "Work not found" })
       }
 
-      res.status(200).json({ work })
+      res.status(200).json(result)
     } catch (error) {
       console.error(error)
       res.status(500).json({ error: "Internal server error" })
     }
   },
 
-  async getAllWorks(req: Request<{ characterId: String }>, res: Response) {
+  async getAllWorks(req: Request<{ characterId: string }>, res: Response) {
     try {
       const { characterId } = req.params
-      const works = await Work.find({ characterId })
 
-      res.status(200).json({ works })
+      const pipeline = workPipeline({
+        characterId: new mongoose.Types.ObjectId(characterId)
+      })
+      const result = await Work.aggregate(pipeline).exec()
+
+      res.status(200).json(result)
     } catch (error) {
       console.error(error)
       res.status(500).json({ error: "Internal server error" })

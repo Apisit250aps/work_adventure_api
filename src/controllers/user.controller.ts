@@ -134,7 +134,7 @@ async function userStatisticUpdate(
 
 async function userData(req: Request, res: Response) {
   try {
-    console.log(req.user?.id)
+
     const pipeline = userPipeline({ _id: req.user?._id })
     const result = await User.aggregate(pipeline).exec()
     res.json(result)
