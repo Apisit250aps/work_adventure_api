@@ -5,7 +5,7 @@
   "scripts": {
     "dev": "nodemon --watch src --exec ts-node-dev src/index.ts",
     "build": "npx tsc",
-    "start": "node src/index.ts"
+    "start": "node dist/index.js"
   },
   "keywords": [],
   "author": "",
