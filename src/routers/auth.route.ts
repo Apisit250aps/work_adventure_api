@@ -3,8 +3,8 @@ import authController from "../controllers/auth.controller"
 import { authenticateJWT } from "../middlewares/auth.middleware"
 
 const auth = Router()
+auth.get("/", authenticateJWT,authController.checkAuth)
 auth.post("/register", authController.userRegister)
 auth.post("/login", authController.userLogin)
 auth.use(authenticateJWT)
-auth.get("/check", authenticateJWT,authController.checkAuth)
 export default auth

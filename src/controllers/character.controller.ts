@@ -5,6 +5,7 @@ import { ICharacter, Character } from "../models/character.model"
 import { Special } from "../models/special.model"
 import { IUser } from "../models/user.model"
 import { CharacterStatistics } from "../models/characterStatistic.model"
+import character from "../routers/character.route"
 
 export default {
   async createCharacter(
@@ -83,6 +84,18 @@ export default {
         message: "Character deleted successfully",
         deletedCharacter
       })
+    } catch (error) {
+      return res
+        .status(500)
+        .json({ error: error || "An unexpected error occurred" })
+    }
+  },
+
+  async myCharacter(req: Request, res: Response) {
+    try {
+      const userId = req.user?._id
+      const characters = await Character.find({ userId: req.user?.id })
+      res.status(200).json(characters)
     } catch (error) {
       return res
         .status(500)
