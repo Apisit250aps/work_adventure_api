@@ -1,6 +1,7 @@
 import { Request, Response } from "express"
 import { IWork, Work } from "../models/work.model"
 import mongoose from "mongoose"
+import { workAllPipeline } from "./pipelines/work.pipeline";
 
 const workPipeline = (match: Record<string, unknown> = {}) => [
   {
@@ -144,12 +145,12 @@ export default {
   async getAllWorks(req: Request<{ characterId: string }>, res: Response) {
     try {
       const { characterId } = req.params
-
+  
       const pipeline = workPipeline({
         characterId: new mongoose.Types.ObjectId(characterId)
       })
       const result = await Work.aggregate(pipeline).exec()
-
+  
       res.status(200).json(result)
     } catch (error) {
       console.error(error)

@@ -6,7 +6,6 @@ import mongoose, { Schema, Document, Types, ObjectId } from "mongoose";
 export interface ISpecial extends Document {
   specialId?: ObjectId;
   charId: Types.ObjectId;
-
   strength: number;
   perception: number;
   endurance: number;
