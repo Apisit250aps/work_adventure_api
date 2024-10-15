@@ -32,6 +32,7 @@ const TaskSchema = new mongoose_1.Schema({
     start_date: { type: Date, required: false },
     due_date: { type: Date, required: false },
     isDone: { type: Boolean, default: false },
+    isFirst: { type: Boolean, default: true },
     workId: { type: mongoose_1.Schema.Types.ObjectId, ref: "Work" }
 }, {
     timestamps: true // Automatically adds `createdAt` and `updatedAt` fields

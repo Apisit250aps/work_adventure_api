@@ -49,6 +49,7 @@ const workPipeline = (match = {}) => [
                         start_date: "$$task.start_date",
                         due_date: "$$task.due_date",
                         isDone: "$$task.isDone",
+                        isFirst: "$$task.isFirst",
                         createdAt: "$$task.createdAt",
                         updatedAt: "$$task.updatedAt"
                     }

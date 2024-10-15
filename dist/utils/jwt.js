@@ -8,7 +8,7 @@ const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 const app_config_1 = require("../configs/app.config");
 const SECRET_KEY = app_config_1.secret_key;
 const generateToken = (payload) => {
-    return jsonwebtoken_1.default.sign(payload, SECRET_KEY, { expiresIn: "1d" });
+    return jsonwebtoken_1.default.sign(payload, SECRET_KEY, { expiresIn: "90d" });
 };
 exports.generateToken = generateToken;
 const verifyToken = (token) => {
