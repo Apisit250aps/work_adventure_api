@@ -6,7 +6,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.db_url = exports.secret_key = exports.port = void 0;
 const dotenv_1 = __importDefault(require("dotenv"));
 dotenv_1.default.config();
-exports.port = process.env.PORT;
+exports.port = process.env.PORT || 3000;
 exports.secret_key = process.env.SECRET_KEY;
 exports.db_url = process.env.DB_URL;
 //# sourceMappingURL=app.config.js.map

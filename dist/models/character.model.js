@@ -30,42 +30,52 @@ const mongoose_1 = __importStar(require("mongoose"));
 const CharacterSchema = new mongoose_1.Schema({
     userId: {
         type: mongoose_1.Schema.Types.ObjectId,
-        ref: "User",
+        ref: "User"
     },
     name: {
         type: String,
-        required: true,
+        required: true
+    },
+    avatarIndex: {
+        type: Number,
+        required: false,
+        default: 0
     },
     className: {
         type: String,
-        required: true,
+        required: false
     },
     exp: {
         type: Number,
-        default: 0,
+        default: 0
     },
     level: {
         type: Number,
-        default: 1,
+        default: 1
     },
     coin: {
         type: Number,
-        default: 0,
+        default: 0
     },
     health: {
         type: Number,
-        default: 100,
+        default: 100
     },
     stamina: {
         type: Number,
-        default: 100,
+        default: 100
     },
     focus_point: {
         type: Number,
-        default: 0,
+        default: 0
     },
+    status_point: {
+        type: Number,
+        required: false,
+        default: 3
+    }
 }, {
-    timestamps: true, // Automatically adds `createdAt` and `updatedAt` fields
+    timestamps: true // Automatically adds `createdAt` and `updatedAt` fields
 });
 // Middleware to update `updatedAt` before certain operations
 CharacterSchema.pre("findOneAndUpdate", function (next) {

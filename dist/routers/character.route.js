@@ -9,6 +9,7 @@ const character_controller_1 = __importDefault(require("../controllers/character
 const auth_middleware_1 = require("../middlewares/auth.middleware");
 const auth = auth_middleware_1.authenticateJWT;
 const character = (0, express_1.Router)();
+character.get('/', auth, character_controller_1.default.myCharacter);
 character.post("/create", auth, character_controller_1.default.createCharacter);
 character.get("/get/:charId", auth, character_controller_1.default.getCharacter);
 character.put("/update/:charId", auth, character_controller_1.default.updateCharacter);

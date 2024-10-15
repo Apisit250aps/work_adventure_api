@@ -11,6 +11,7 @@ const character_route_1 = __importDefault(require("./character.route"));
 const quest_route_1 = __importDefault(require("./quest.route"));
 const tasks_route_1 = __importDefault(require("./tasks.route"));
 const user_route_1 = __importDefault(require("./user.route"));
+const special_route_1 = __importDefault(require("./special.route"));
 const router = (0, express_1.Router)();
 router.get("/", (req, res) => {
     res.send("Hello World").status(200);
@@ -22,5 +23,6 @@ router.use("/character", character_route_1.default);
 router.use("/work", work_route_1.default);
 router.use("/quest", quest_route_1.default);
 router.use("/tasks", tasks_route_1.default);
+router.use("/special", special_route_1.default);
 exports.default = router;
 //# sourceMappingURL=index.route.js.map

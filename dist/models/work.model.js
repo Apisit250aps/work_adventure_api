@@ -34,7 +34,7 @@ const WorkSchema = new mongoose_1.Schema({
     status: {
         type: String,
         enum: ["todo", "inprogress", "done"],
-        required: true,
+        required: false,
         default: "todo"
     }
 }, {

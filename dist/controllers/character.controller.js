@@ -9,10 +9,14 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 const character_model_1 = require("../models/character.model");
 const special_model_1 = require("../models/special.model");
 const characterStatistic_model_1 = require("../models/characterStatistic.model");
+const mongoose_1 = __importDefault(require("mongoose"));
 exports.default = {
     createCharacter(req, res) {
         var _a;
@@ -45,7 +49,25 @@ exports.default = {
         return __awaiter(this, void 0, void 0, function* () {
             try {
                 const { charId } = req.params;
-                const characters = yield character_model_1.Character.find({ _id: charId });
+                const characters = yield character_model_1.Character.aggregate([
+                    {
+                        $match: { _id: new mongoose_1.default.Types.ObjectId(charId) } // หา Character ด้วย charId
+                    },
+                    {
+                        $lookup: {
+                            from: 'specials',
+                            localField: '_id',
+                            foreignField: 'charId',
+                            as: 'special' // ผลลัพธ์จะถูกใส่ในฟิลด์นี้
+                        }
+                    },
+                    {
+                        $unwind: {
+                            path: '$special',
+                            preserveNullAndEmptyArrays: true // ถ้าไม่มีข้อมูล Special ก็ให้คง Character ไว้
+                        }
+                    }
+                ]);
                 return res.json({ characters });
             }
             catch (error) {
@@ -74,6 +96,21 @@ exports.default = {
                     message: "Character deleted successfully",
                     deletedCharacter
                 });
+            }
+            catch (error) {
+                return res
+                    .status(500)
+                    .json({ error: error || "An unexpected error occurred" });
+            }
+        });
+    },
+    myCharacter(req, res) {
+        var _a, _b;
+        return __awaiter(this, void 0, void 0, function* () {
+            try {
+                const userId = (_a = req.user) === null || _a === void 0 ? void 0 : _a._id;
+                const characters = yield character_model_1.Character.find({ userId: (_b = req.user) === null || _b === void 0 ? void 0 : _b.id });
+                res.status(200).json(characters);
             }
             catch (error) {
                 return res

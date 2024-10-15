@@ -12,6 +12,6 @@ task.post("/create/:workId", tasks_controller_1.default.createTask); // Create a
 task.put("/update/:taskId", tasks_controller_1.default.updateTask); // Update an existing task by ID
 task.delete("/delete/:taskId", tasks_controller_1.default.deleteTask); // Delete a task by ID
 task.get("/get/:taskId", tasks_controller_1.default.getTask); // Get a task by ID
-task.get("/all/:workId", tasks_controller_1.default.getAllTasks); // Get all tasks
+task.get("/:workId", tasks_controller_1.default.getAllTasks); // Get all tasks
 exports.default = task;
 //# sourceMappingURL=tasks.route.js.map
