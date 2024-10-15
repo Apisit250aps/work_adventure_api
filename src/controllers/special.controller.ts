@@ -1,58 +1,139 @@
-/** @format */
-
-import { Request, Response } from "express";
+import mongoose from "mongoose";
 import { ISpecial, Special } from "../models/special.model";
-import { IUser } from "../models/user.model";
+import { Request, Response } from "express";
+const specialPipeline = (match: Record<string, unknown> = {}) => [
+  {
+    $match: match
+  },
+  {
+    $project: {
+      _id: 1,
+      charId: 1,
+      strength: 1,
+      perception: 1,
+      endurance: 1,
+      charisma: 1,
+      intelligence: 1,
+      agility: 1,
+      luck: 1,
+      createdAt: 1,
+      updatedAt: 1
+    }
+  }
+];
 
 export default {
-  async Updatespecials(
-    req: Request<{
-      user?: IUser;
-      body: ISpecial;
-      charId: string;
-    }>,
+  async createSpecial(
+    req: Request<{ body: ISpecial; charId: string }>,
     res: Response
   ) {
     try {
-      const userId = req.user?._id;
-      if (!userId) {
-        return res.status(401).json({ error: "Unauthorized" });
-      }
+      const { strength, perception, endurance, charisma, intelligence, agility, luck } = req.body;
+      const { charId } = req.params;
 
-      const { charId } = req.params; // Get charId from the URL
-      const { attribute, value }: { attribute: keyof ISpecial; value: number } =
-        req.body;
+      const newSpecial = await Special.create({
+        charId: new mongoose.Types.ObjectId(charId),
+        strength,
+        perception,
+        endurance,
+        charisma,
+        intelligence,
+        agility,
+        luck
+      });
 
-      // Find the special by charId
-      const special = await Special.findOne({ charId });
-
-      // Check if the special exists
-      if (!special) {
-        return res.status(404).json({ error: "Special not found" });
-      }
-
-      // Verify if the character associated with this special belongs to the authenticated user
-      if (special.charId.toString() !== charId) {
-        // Assuming you have userId in Special schema
-        return res.status(403).json({ error: "Forbidden" });
-      }
-
-      // Prepare the update data
-      const updateData = { [attribute]: value };
-
-      // Update the special
-      const updatedSpecial = await Special.findOneAndUpdate(
-        { charId }, // Filter by charId
-        updateData, // Data to update
-        { new: true } // Return the updated document
-      );
-
-      // Return the updated special
-      return res.status(200).json(updatedSpecial);
+      res.status(201).json({
+        message: "Special stats created successfully!",
+        special: newSpecial
+      });
     } catch (error) {
-      return res
-        .status(500)
-        .json({ error: error || "An unexpected error occurred" });
+      console.error(error);
+      res.status(500).json({ error: "Internal server error" });
     }
   },
+
+  async updateSpecial(
+    req: Request<{ specialId: string; body: Partial<ISpecial> }>,
+    res: Response
+  ) {
+    try {
+      const { specialId } = req.params;
+      const updateData = req.body;
+
+      console.log(updateData);
+
+      const updatedSpecial = await Special.findByIdAndUpdate(
+        specialId,
+        updateData,
+        { new: true }
+      );
+
+      if (!updatedSpecial) {
+        return res.status(404).json({ error: "Special stats not found" });
+      }
+
+      res.status(200).json({
+        message: "Special stats updated successfully!",
+        special: updatedSpecial
+      });
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ error: "Internal server error" });
+    }
+  },
+
+  async deleteSpecial(req: Request<{ specialId: string }>, res: Response) {
+    try {
+      const { specialId } = req.params;
+
+      const deletedSpecial = await Special.findByIdAndDelete(specialId);
+
+      if (!deletedSpecial) {
+        return res.status(404).json({ error: "Special stats not found" });
+      }
+
+      res.status(200).json({
+        message: "Special stats deleted successfully!",
+        special: deletedSpecial
+      });
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ error: "Internal server error" });
+    }
+  },
+
+  async getSpecial(req: Request<{ specialId: string }>, res: Response) {
+    try {
+      const { specialId } = req.params;
+      const pipeline = specialPipeline({
+        _id: new mongoose.Types.ObjectId(specialId)
+      });
+      const result = await Special.aggregate(pipeline).exec();
+
+      if (!result || result.length === 0) {
+        return res.status(404).json({ error: "Special stats not found" });
+      }
+
+      res.status(200).json(result[0]);
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ error: "Internal server error" });
+    }
+  },
+
+  async getAllSpecials(req: Request<{ charId: string }>, res: Response) {
+    try {
+      const { charId } = req.params;
+
+      const pipeline = specialPipeline({
+        charId: new mongoose.Types.ObjectId(charId)
+      });
+      const result = await Special.aggregate(pipeline).exec();
+
+      res.status(200).json(result[0]);
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ error: "Internal server error" });
+    }
+  }
 };
