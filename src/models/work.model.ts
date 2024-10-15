@@ -6,7 +6,7 @@ export interface IWork extends Document {
   description?: string
   start_date?: Date
   due_date?: Date
-  status?: "todo" | "inprogress" | "done"
+  status?: String
   createdAt: Date
   updatedAt: Date
 }
@@ -21,7 +21,7 @@ const WorkSchema: Schema<IWork> = new Schema(
     status: {
       type: String,
       enum: ["todo", "inprogress", "done"],
-      required: true,
+      required: false,
       default: "todo"
     }
   },

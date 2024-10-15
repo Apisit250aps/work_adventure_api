@@ -3,6 +3,9 @@ import { comparePasswords, hashPassword } from "../utils/password"
 import { IUser, User } from "../models/user.model"
 import { generateToken } from "../utils/jwt"
 import { UserStatistics } from "../models/userStatistic.model"
+import { Character, ICharacter } from "../models/character.model"
+import { CharacterStatistics } from "../models/characterStatistic.model"
+
 export default {
   async userRegister(req: Request<{ body: IUser }>, res: Response) {
     try {
@@ -21,7 +24,6 @@ export default {
       })
 
       await UserStatistics.create({ userId: newUser })
-
       return res.status(201).json({ newUser })
     } catch (error) {
       console.error(error)
@@ -36,16 +38,13 @@ export default {
       if (!user) {
         return res.status(401).json({ error: "Invalid username or password" })
       }
-
       const isPasswordValid = await comparePasswords(
         password,
         user.password as any
       )
-
       if (!isPasswordValid) {
         return res.status(401).json({ error: "Invalid username or password" })
       }
-
       const token = generateToken({
         userId: user._id,
         username: user.username,
@@ -59,7 +58,9 @@ export default {
   },
   async checkAuth(req: Request, res: Response) {
     try {
-      return res.status(200).json({})
+      const user = (await User.findOne({ _id: req.user?._id })) as IUser
+      const { password, ...userWithoutPassword } = user.toObject()
+      return res.status(200).json(userWithoutPassword)
     } catch (error) {
       return res.status(500).json({ error })
     }

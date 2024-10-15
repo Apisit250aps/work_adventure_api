@@ -9,6 +9,7 @@ import quest from "./quest.route";
 
 import task from "./tasks.route";
 import user from "./user.route"
+import special from "./special.route";
 const router = Router()
 router.get("/", (req: Request, res: Response) => {
   res.send("Hello World").status(200)
@@ -20,5 +21,5 @@ router.use("/character", character)
 router.use("/work", work)
 router.use("/quest", quest)
 router.use("/tasks", task)
-
+router.use("/special", special)
 export default router
