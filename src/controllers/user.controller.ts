@@ -1,6 +1,8 @@
 import { Response, Request } from "express"
 import { User, IUser } from "../models/user.model"
 import { IUserStatistics, UserStatistics } from "../models/userStatistic.model"
+import mongoose from "mongoose"
+import { Character } from "../models/character.model"
 
 const userPipeline = (match: {}) => [
   {
@@ -119,7 +121,7 @@ async function userStatisticUpdate(
   try {
     const { userStatisticId } = req.params
     await UserStatistics.findByIdAndUpdate(
-      { _id:userStatisticId },
+      { _id: userStatisticId },
       { ...req.body },
       { new: true }
     ).then((result) => {
@@ -134,7 +136,6 @@ async function userStatisticUpdate(
 
 async function userData(req: Request, res: Response) {
   try {
-
     const pipeline = userPipeline({ _id: req.user?._id })
     const result = await User.aggregate(pipeline).exec()
     res.json(result)
@@ -146,9 +147,81 @@ async function userData(req: Request, res: Response) {
   }
 }
 
+interface UserStats {
+  userId: mongoose.Types.ObjectId
+  username?: string
+  totalFocusPoint: number
+  totalCoin: number
+  totalPoints: number
+}
+
+async function getUserStats(
+  req: Request<{ userId: string }>,
+  res: Response
+): Promise<void> {
+  try {
+    const userId = req.params.userId
+      ? new mongoose.Types.ObjectId(req.params.userId)
+      : undefined
+
+    const aggregationPipeline: mongoose.PipelineStage[] = [
+      ...(userId ? [{ $match: { userId: userId } }] : []),
+      {
+        $group: {
+          _id: "$userId",
+          totalFocusPoint: { $sum: { $ifNull: ["$focus_point", 0] } },
+          totalCoin: { $sum: { $ifNull: ["$coin", 0] } }
+        }
+      },
+      {
+        $lookup: {
+          from: "users",
+          localField: "_id",
+          foreignField: "userId",
+          as: "userInfo"
+        }
+      },
+      {
+        $unwind: {
+          path: "$userInfo",
+          preserveNullAndEmptyArrays: true
+        }
+      },
+      {
+        $project: {
+          _id: 0,
+          userId: "$_id",
+          username: "$userInfo.username",
+          totalFocusPoint: 1,
+          totalCoin: 1,
+          totalPoints: { $add: ["$totalFocusPoint", "$totalCoin"] }
+        }
+      },
+      {
+        $sort: { totalPoints: -1 }
+      }
+    ]
+
+    const stats: UserStats[] = await Character.aggregate(aggregationPipeline)
+
+    if (userId && stats.length === 0) {
+      res.status(404).json({ message: "User not found or has no characters" })
+    } else {
+      res.status(200).json(stats)
+    }
+  } catch (error) {
+    console.error("Error in getUserStats:", error)
+    res.status(500).json({
+      message: "Internal server error",
+      error: (error as Error).message
+    })
+  }
+}
+
 export default {
   updateUser,
   deleteUser,
   userData,
-  userStatisticUpdate
+  userStatisticUpdate,
+  getUserStats
 }

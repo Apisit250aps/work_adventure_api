@@ -5,7 +5,7 @@ import mongoose, { Schema, Document, Types, ObjectId } from "mongoose"
 // Define the ICharacter interface extending Document
 export interface ICharacter extends Document {
   charId?: ObjectId
-  userId: Types.ObjectId
+  userId: ObjectId
   name: string
   avatarIndex?: number
   className?: string
