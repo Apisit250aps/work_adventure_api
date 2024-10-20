@@ -171,7 +171,7 @@ function getUserStats(req, res) {
                     $lookup: {
                         from: "users",
                         localField: "_id",
-                        foreignField: "userId",
+                        foreignField: "_id",
                         as: "userInfo"
                     }
                 },
@@ -185,7 +185,7 @@ function getUserStats(req, res) {
                     $project: {
                         _id: 0,
                         userId: "$_id",
-                        username: "$userInfo.username",
+                        username: { $ifNull: ["$userInfo.username", "Unknown"] },
                         totalFocusPoint: 1,
                         totalCoin: 1,
                         totalPoints: { $add: ["$totalFocusPoint", "$totalCoin"] }
