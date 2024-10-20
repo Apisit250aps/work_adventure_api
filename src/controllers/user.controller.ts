@@ -177,7 +177,7 @@ async function getUserStats(
         $lookup: {
           from: "users",
           localField: "_id",
-          foreignField: "userId",
+          foreignField: "_id", // ปรับตรงนี้ถ้า field ใน users collection ไม่ใช่ _id
           as: "userInfo"
         }
       },
@@ -191,7 +191,7 @@ async function getUserStats(
         $project: {
           _id: 0,
           userId: "$_id",
-          username: "$userInfo.username",
+          username: { $ifNull: ["$userInfo.username", "Unknown"] }, // เพิ่ม fallback value
           totalFocusPoint: 1,
           totalCoin: 1,
           totalPoints: { $add: ["$totalFocusPoint", "$totalCoin"] }
